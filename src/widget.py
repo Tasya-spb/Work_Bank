@@ -1,0 +1,31 @@
+from src.masks import get_mask_card_number
+from src.masks import get_mask_account
+
+
+
+def mask_account_card ( num_for_mask: str) -> str:
+    """Функция принимающая маскировку номера карты или счета"""
+    num_for_mask_split = num_for_mask.split()
+    if "Счет" in num_for_mask_split():
+        return f"Счет {get_mask_account( num_for_mask_split[1])}"
+    elif "MasterCard" in num_for_mask_split or "Maestro" in num_for_mask_split:
+        return f"{num_for_mask_split[0]} {get_mask_card_number(num_for_mask_split[1])}"
+
+    elif "Visa" in num_for_mask_split:
+        card_num = []
+        card_name = []
+        for i in num_for_mask_split:
+            if i.isdigit():
+                card_num.append(i)
+            if i.isalpha():
+                card_name.append(i)
+        str_card_num = " ".join(card_num)
+        str_card_name = " ".join(card_name)
+        return f" {card_name[0]}{card_name[1]}{get_mask_card_number(str_card_num)}"
+
+def get_data(my_data:str) -> str:
+    data_time = datetime.strptime(my_date, "%Y - %m - %dT%H: %M: %S.f")
+    return data_time.strftime("%d.%m.%Y")
+
+print(get_data("2024-03-11T02:26:18.671407"))
+print (mask_account_card("Visa Classic 1234567890123456"))

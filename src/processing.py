@@ -4,6 +4,7 @@ from datetime import datetime
 
 def filter_by_state(filtered_dictionaries, state='EXECUTE'):
     return [x for x in filtered_dictionaries if x['state'] == state]
+"""Функция которая выбирает из списка значание EXECUTE"""
 
 dictionaries = [
     {'id': 41428829, 'state': 'EXECUTED', 'date': '2019-07-03T18:35:29.512364'},
@@ -16,6 +17,8 @@ print(filter_by_state(dictionaries))
 
 def sort_by_date(transactions, reverse=True):
     return sorted(transactions, key=lambda x: datetime.fromisoformat(x['date']), reverse=reverse)
+"""Функция которая сортируеь по дате, на уменьшение"""
+
 
 roster_of_dates =[
     {'id': 41428829, 'state': 'EXECUTED', 'date': '2019-07-03T18:35:29.512364'},

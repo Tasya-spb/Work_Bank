@@ -102,7 +102,7 @@ def get_valid_account_number() -> str:
         print("Номер счёта принят")
         return number_account
 
-def mask_account_number(account_number: str) -> str:
+def get_mask_account(account_number: str) -> str:
     """
     Маскирует последние 4 цифры номера счёта.
     Оставляет видимыми первые 16 цифр, последние 4 заменяет на '****'.
@@ -111,15 +111,25 @@ def mask_account_number(account_number: str) -> str:
         account_number (str): 20‑значный номер счёта
 
     Returns:
-        str: Замаскированный номер счёта
+        str: Замаскированный номер счёта в формате XXXXXXXXXXXXXXXXXX****
+
+    Raises:
+        ValueError: Если длина номера ≠ 20 или строка не состоит из цифр
     """
+    if not account_number.isdigit():
+        raise ValueError("Номер счёта должен содержать только цифры")
+
+    if len(account_number) != 20:
+        raise ValueError(f"Ошибка: номер счёта должен содержать ровно 20 цифр, получено {len(account_number)}")
+
     return f"{account_number[:16]}****"
 
 # Пример использования
+
 if __name__ == "__main__":
     try:
         valid_account = get_valid_account_number()
-        masked_account = mask_account_number(valid_account)
+        masked_account = get_mask_account(valid_account)
         print(f"Замаскированный номер счёта: {masked_account}")
     except ValueError as e:
         print(f"Ошибка: {e}")

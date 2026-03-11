@@ -81,19 +81,45 @@ if __name__ == "__main__":
 
 
 
-while True:
-    number_account = input("Введите номер счета (ровно 20 цифр): ")
-    """Запрос номера счета пользователя"""
-    if len(number_account) == 20 and number_account.isdigit():
-        print("Номер счета принят")
-        break
-    else:
-        print("Ошибка: номер счета должен содержать ровно 20 цифр")
-"""Цикл на ввод 20-ти значного номера счета"""
+def get_valid_account_number() -> str:
+    """
+    Запрашивает у пользователя номер счёта до тех пор, пока не будет введён корректный 20‑значный номер.
 
+    Returns:
+        str: Корректный 20‑значный номер счёта
+    """
+    while True:
+        number_account = input("Введите номер счёта (ровно 20 цифр): ").strip()
 
-def get_mask_account(number_account: str) -> str:
-    return f"**{number_account[16:]}"
+        if len(number_account) != 20:
+            print(f"Ошибка: номер счёта должен содержать ровно 20 цифр, а не {len(number_account)}")
+            continue
 
+        if not number_account.isdigit():
+            print("Ошибка: номер счёта должен содержать только цифры")
+            continue
 
-print(get_mask_account(number_account))
+        print("Номер счёта принят")
+        return number_account
+
+def mask_account_number(account_number: str) -> str:
+    """
+    Маскирует последние 4 цифры номера счёта.
+    Оставляет видимыми первые 16 цифр, последние 4 заменяет на '****'.
+
+    Args:
+        account_number (str): 20‑значный номер счёта
+
+    Returns:
+        str: Замаскированный номер счёта
+    """
+    return f"{account_number[:16]}****"
+
+# Пример использования
+if __name__ == "__main__":
+    try:
+        valid_account = get_valid_account_number()
+        masked_account = mask_account_number(valid_account)
+        print(f"Замаскированный номер счёта: {masked_account}")
+    except ValueError as e:
+        print(f"Ошибка: {e}")

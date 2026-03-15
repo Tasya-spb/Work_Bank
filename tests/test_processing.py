@@ -1,6 +1,10 @@
-import pytest
 from datetime import datetime
-from src.processing import filter_by_state, sort_by_date  # Замените на ваш путь к файлу
+
+import pytest
+
+from src.processing import (filter_by_state,  # Замените на ваш путь к файлу
+                            sort_by_date)
+
 
 @pytest.fixture
 def sample_data():

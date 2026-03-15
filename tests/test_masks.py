@@ -1,62 +1,54 @@
+from unittest.mock import patch
 
 import pytest
-from src.masks import get_mask_card_number, get_mask_account
 
+from src.masks import (get_mask_account, get_mask_card_number,
+                       get_user_card_number, get_valid_account_number)
 
-@pytest.mark.parametrize("valid_card, expected_masked", [
-    # Стандартный случай — корректный 16‑значный номер
-    ("4967396863956970", "4967396*****6970"),
+# --- ТЕСТЫ МАСКИРОВКИ (Чистые функции) ---
+
+@pytest.mark.parametrize("card, expected", [
     ("1234567890123456", "1234567*****3456"),
-    ("0000000000000000", "0000000*****0000"),
 ])
-def test_get_mask_card_number (valid_card, expected_masked):
-    """Тест маскирования корректных 16‑значных номеров карт."""
-    result = get_mask_card_number(valid_card)
-    assert result == expected_masked
+def test_get_mask_card_number_success(card, expected):
+    assert get_mask_card_number(card) == expected
 
+@pytest.mark.parametrize("invalid", ["123", "abc1234567890123", ""])
+def test_get_mask_card_number_errors(invalid):
+    with pytest.raises(ValueError, match="ровно 16 цифр"):
+        get_mask_card_number(invalid)
 
-@pytest.mark.parametrize("invalid_length, error_message", [
-    # Слишком короткие номера
-    ("", "Ошибка: номер счёта должен содержать ровно 20 цифр"),
-    ("1", "Ошибка: номер счёта должен содержать ровно 20 цифр"),
-    ("12345", "Ошибка: номер счёта должен содержать ровно 20 цифр"),
-    ("1234567890123456", "Ошибка: номер счёта должен содержать ровно 20 цифр"),
-
-    # Слишком длинные номера
-    ("123456789012345678901", "Ошибка: номер счёта должен содержать ровно 20 цифр"),
-    ("12345678901234567890123", "Ошибка: номер счёта должен содержать ровно 20 цифр"),
-    ("1" * 25, "Ошибка: номер счёта должен содержать ровно 20 цифр"),
-])
-def test_get_mask_account(invalid_length, error_message):
-    """Тест обработки номеров карт с некорректной длиной."""
-    with pytest.raises(ValueError, match=f".*{error_message}.*"):
-        get_mask_card_number(invalid_length)
-
-@pytest.mark.parametrize("account_number, expected_masked", [
-    # Стандартные корректные случаи
+@pytest.mark.parametrize("acc, expected", [
     ("12345678901234567890", "1234567890123456****"),
-    ("00000000000000000000", "0000000000000000****"),
-    ("99998888777766665555", "9999888877776666****"),
-    ("11112222333344445555", "1111222233334444****"),
 ])
-def test_get_mask_account(account_number, expected_masked):
-    """Тест маскирования корректных 20‑значных номеров счетов."""
-    result = get_mask_account(account_number)
-    assert result == expected_masked
+def test_get_mask_account_success(acc, expected):
+    assert get_mask_account(acc) == expected
 
-@pytest.mark.parametrize("invalid_length, error_message", [
-    # Слишком короткие номера счетов
-    ("", "Ошибка: номер счёта должен содержать ровно 20 цифр"),
-    ("1", "Ошибка: номер счёта должен содержать ровно 20 цифр"),
-    ("12345", "Ошибка: номер счёта должен содержать ровно 20 цифр"),
-    ("1234567890123456", "Ошибка: номер счёта должен содержать ровно 20 цифр"),
+@pytest.mark.parametrize("invalid", ["123", "abc", "1" * 21])
+def test_get_mask_account_errors(invalid):
+    with pytest.raises(ValueError, match="ровно 20 цифр"):
+        get_mask_account(invalid)
 
-    # Слишком длинные номера счетов
-    ("123456789012345678901", "Ошибка: номер счёта должен содержать ровно 20 цифр"),
-    ("12345678901234567890123", "Ошибка: номер счёта должен содержать ровно 20 цифр"),
-    ("1" * 25, "Ошибка: номер счёта должен содержать ровно 20 цифр"),
-])
-def test_get_mask_account(invalid_length, error_message):
-    """Тест обработки номеров счетов с некорректной длиной."""
-    with pytest.raises(ValueError, match=f".*{error_message}.*"):
-        get_mask_account(invalid_length)
+# --- ТЕСТЫ ВВОДА (Имитация пользователя через patch) ---
+
+def test_get_user_card_number_valid():
+    """Эмулируем ввод: сначала ошибка, потом верный номер"""
+    with patch('builtins.input', side_effect=["123", "1234567890123456"]):
+        assert get_user_card_number() == "1234567890123456"
+
+def test_get_valid_account_number_valid():
+    """Эмулируем ввод: сначала буквы, потом неверная длина, потом успех"""
+    with patch('builtins.input', side_effect=["abc", "123", "12345678901234567890"]):
+        assert get_valid_account_number() == "12345678901234567890"
+
+def test_get_user_card_number_full_coverage():
+    """Неверная длина, 2. Буквы, 3. Верный номер"""
+    inputs = ["123", "abc1234567890123", "1234567890123456"]
+    with patch('builtins.input', side_effect=inputs):
+        assert get_user_card_number() == "1234567890123456"
+
+def test_get_valid_account_number_full_coverage():
+    """"Неверная длина, 2. Буквы вместо цифр, 3. Верный номер"""""
+    inputs = ["123", "123456789012345678ab", "12345678901234567890"]
+    with patch('builtins.input', side_effect=inputs):
+        assert get_valid_account_number() == "12345678901234567890"

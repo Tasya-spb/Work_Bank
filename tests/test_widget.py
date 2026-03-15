@@ -1,6 +1,8 @@
-import pytest
 from datetime import datetime
-from src.widget import mask_account_card, get_data
+
+import pytest
+
+from src.widget import get_data, mask_account_card
 
 
 # Тесты для функции mask_account_card

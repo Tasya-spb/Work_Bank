@@ -2,7 +2,7 @@ from datetime import datetime
 
 
 
-def filter_by_state(filtered_dictionaries, state='EXECUTE'):
+def filter_by_state(filtered_dictionaries, state='EXECUTED'):
     return [x for x in filtered_dictionaries if x['state'] == state]
 """Функция которая выбирает из списка значание EXECUTE"""
 

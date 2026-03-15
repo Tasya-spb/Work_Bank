@@ -24,7 +24,7 @@ Returns:str: Замаскированный номер в формате XXXXXXX
 
 # Маскируем цифры с 8 по 12 (индексы 7–11)
     masked_part = "*****"
-    return f"{card_number[:7]} {masked_part} {card_number[-4:]}"
+    return (f"{card_number[:7]}{masked_part}{card_number[-4:]}")
 
 # Пример использования
 if __name__ == "__main__":

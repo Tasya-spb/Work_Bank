@@ -84,8 +84,8 @@ def get_mask_account(account_number: str) -> str:
 
 if __name__ == "__main__":
     try:
-        valid_account = get_valid_account_number()
-        masked_account = get_mask_account(valid_account)
+        account_number = get_valid_account_number()
+        masked_account = get_mask_account(account_number)
         print(f"Замаскированный номер счёта: {masked_account}")
     except ValueError as e:
         print("Ошибка: номер счёта должен содержать ровно 20 цифр")

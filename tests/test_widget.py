@@ -1,5 +1,3 @@
-from datetime import datetime
-
 import pytest
 
 from src.widget import get_data, mask_account_card
@@ -19,10 +17,12 @@ def test_mask_account_card_valid(input_data, expected):
     """Проверка корректной маскировки разных типов карт и счетов"""
     assert mask_account_card(input_data) == expected
 
+
 def test_mask_account_card_empty():
     """Проверка устойчивости к пустым входным данным"""
-    with pytest.raises(Exception): # Или укажите конкретную ошибку, которую выдает ваш код
+    with pytest.raises(Exception):  # Или укажите конкретную ошибку, которую выдает ваш код
         mask_account_card("")
+
 
 # Тесты для функции get_data
 @pytest.mark.parametrize("input_date, expected_date", [
@@ -34,7 +34,8 @@ def test_get_data_format(input_date, expected_date):
     """Проверка корректного преобразования формата даты"""
     assert get_data(input_date) == expected_date
 
+
 def test_get_data_invalid_format():
     """Проверка обработки некорректной строки даты"""
     with pytest.raises(ValueError):
-        get_data("11.03.2024") # Неверный входной формат
+        get_data("11.03.2024")  # Неверный входной формат

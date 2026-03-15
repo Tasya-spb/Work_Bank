@@ -1,3 +1,5 @@
+
+
 from typing import Any, Dict, List
 
 
@@ -22,5 +24,7 @@ def card_number_generator(start, stop):
         card_str = f"{number:016}"
         # Разделяем строку на блоки по 4 символа через пробел
         yield f"{card_str[:4]} {card_str[4:8]} {card_str[8:12]} {card_str[12:]}"
+
+
 for card_number in card_number_generator(1, 5):
     print(card_number)

@@ -3,7 +3,7 @@ from typing import Any, Callable, Optional
 
 
 def log(filename: Optional[str] = None) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
-    """Декоратор для логирования работы функции."""
+
     def wrapper(func):
         @functools.wraps(func)
         def inner(*args, **kwargs):

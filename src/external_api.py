@@ -25,7 +25,7 @@ def get_transaction_amount_in_rub(transaction: Dict[str, Any]) -> float:
     # Если USD или EUR, выполняем конвертацию через API
     if currency in ["USD", "EUR"] and API_KEY:
         # ИСПРАВЛЕННЫЙ URL: 'to' всегда RUB, 'from' берем из транзакции
-        url = f"https://api.apilayer.com{currency}&amount={amount}"
+        url = f"https://api.apilayer.com/exchangerates_data/convert?to=RUB&from={currency}&amount={amount}"
         headers = {"apikey": API_KEY}
 
         try:

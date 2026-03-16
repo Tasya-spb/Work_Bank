@@ -52,7 +52,7 @@ def get_mask_card_number(card_number: str) -> str:
     masked_part = "*****"
     return (f"{card_number[:7]}{masked_part}{card_number[-4:]}")
     # Логирование успешного случая
-    logger.info(f"Карта успешно замаскирован:")
+    logger.info(f"Карта успешно замаскирована: {masked}")
     return
 
 
@@ -108,12 +108,10 @@ def get_mask_account(account_number: str) -> str:
         raise ValueError("Ошибка: номер счёта должен содержать ровно 20 цифр")
         logger.error(f"Ошибка: Некорректный номер счета '{account_number}'")
 
-
     if len(account_number) != 20:
         raise ValueError("Ошибка: номер счёта должен содержать ровно 20 цифр")
 
     return f"{account_number[:16]}****"
-
 
 if __name__ == "__main__":
     try:

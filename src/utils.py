@@ -3,24 +3,21 @@ import logging
 import os
 from typing import Any, Dict, List
 
-# 1. Настройка путей (ИСПРАВЛЕНО: добавлено определение log_dir)
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-log_dir = os.path.join(BASE_DIR, "..", "logs")
-os.makedirs(log_dir, exist_ok=True)
-log_path = os.path.join(log_dir, "utils.log")
+# 1. Определяем путь к файлу
+log_path = "logs/utils.log"
+os.makedirs("logs", exist_ok=True)
 
-# 2. Создание и настройка логера
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
-
-# Очищаем старые хендлеры и настраиваем новые
-if logger.hasHandlers():
-    logger.handlers.clear()
-
+# 2. Создаем handler (тот самый код из вашего вопроса)
 file_handler = logging.FileHandler(log_path, mode='w', encoding='utf-8')
-file_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-file_handler.setFormatter(file_formatter)
+
+# 3. Настраиваем формат (время, модуль, уровень, сообщение)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+file_handler.setFormatter(formatter)
+
+# 4. Добавляем handler к логеру
+logger = logging.getLogger(__name__)
 logger.addHandler(file_handler)
+logger.setLevel(logging.DEBUG)
 
 
 def get_transactions_from_json(file_path: str) -> List[Dict[str, Any]]:
@@ -28,6 +25,7 @@ def get_transactions_from_json(file_path: str) -> List[Dict[str, Any]]:
     logger.info(f"Запрос на чтение транзакций из: {file_path}")
 
     if not os.path.exists(file_path):
+        # Логирование ошибки с уровнем ERROR
         logger.error(f"Файл не найден по пути: {file_path}")
         return []
 

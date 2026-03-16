@@ -30,6 +30,11 @@ def get_transactions_from_json(file_path: str) -> List[Dict[str, Any]]:
         return []
 
     try:
+        # Проверка на пустой файл
+        if not os.path.exists(file_path) or os.path.getsize(file_path) == 0:
+            logger.error(f"Файл {file_path} пуст или не существует")
+            return []
+
         with open(file_path, 'r', encoding='utf-8') as f:
             data = json.load(f)
             if isinstance(data, list):
@@ -37,8 +42,10 @@ def get_transactions_from_json(file_path: str) -> List[Dict[str, Any]]:
                 return data
 
             logger.error(f"Данные в {file_path} не являются списком")
-            return []  # Если в файле не список (например, число или строка)
+            return []
+
     except (json.JSONDecodeError, OSError) as e:
-        # ОЧЕНЬ ВАЖНО: здесь должен быть return [], а не просто pass или print
         logger.error(f"Произошла ошибка при чтении файла {file_path}: {e}")
         return []
+
+    return []
